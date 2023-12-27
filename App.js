@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './HomeScreen';
 import JoinScreen from './JoinScreen';
 import GameScreen from './GameScreen';
+import SelectRoomScreen from './SelectRoomScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Join" component={JoinScreen} />
         <Stack.Screen name="Game" component={GameScreen} />
+        <Stack.Screen name="Select" component={SelectRoomScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

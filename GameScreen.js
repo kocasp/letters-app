@@ -7,11 +7,12 @@ import { doc, onSnapshot } from 'firebase/firestore';
 const GameScreen = ({ route }) => {
     const [roomData, setRoomData] = useState(null);
     const { gameData } = route.params;
-
+    // console.log(gameData.id);
 
 
     useEffect(() => {
         const docRef = doc(db, "rooms", gameData.id);
+        console.log(gameData.id);
 
         const unsubscribe = onSnapshot(docRef, (doc) => {
             if (doc.exists()) {

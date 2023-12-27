@@ -17,11 +17,21 @@ const HomeScreen = ({ navigation }) => {
         setIsCreatingGame(false); // Re-enable button after request completes
     };
 
+    const joinGame = async () => {
+        setIsCreatingGame(true);
+        navigation.navigate('Select')
+    }
+
     return (
         <View style={styles.container}>
             <Button
                 title="Stwórz grę"
                 onPress={createGame}
+                disabled={isCreatingGame}
+            />
+            <Button
+                title="Dolacz do gry"
+                onPress={joinGame}
                 disabled={isCreatingGame}
             />
             {isCreatingGame && (
