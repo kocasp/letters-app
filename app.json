@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a924b737-df29-401c-be16-4e796efe4c10"
+      }
+    },
+    "owner": "kocasp"
   }
 }
