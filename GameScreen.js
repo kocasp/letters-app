@@ -21,24 +21,39 @@ const GameScreen = ({ route }) => {
             console.error("Error getting document:", error);
         });
 
-        return unsubscribe; // Cleanup function to unsubscribe when the component unmounts
+        return unsubscribe;
     }, [gameData.id]);
 
     const submitLetter = async (side) => {
         try {
             const queryParams = new URLSearchParams({
                 roomName: gameData.id,
-                playerHash: gameData.your_player_hash, // Replace with actual playerHash
+                playerHash: gameData.your_player_hash,
                 letter: letter,
                 side: side,
             }).toString();
 
             const url = `https://us-central1-letters-9e7e6.cloudfunctions.net/addLetter?${queryParams}`;
-            const response = await fetch(url);
-            // const responseData = await response.json();
-            // console.log(response);
+            await fetch(url);
         } catch (error) {
             console.error("Error submitting letter:", error);
+        }
+    };
+
+    const checkWord = async () => {
+        try {
+            const queryParams = new URLSearchParams({
+                roomName: gameData.id,
+                playerName: gameData.your_player_hash, // Replace with actual playerName if different
+            }).toString();
+
+            const url = `https://us-central1-letters-9e7e6.cloudfunctions.net/checkWord?${queryParams}`;
+            const response = await fetch(url);
+            const responseData = await response.json();
+            console.log(responseData);
+            // You can handle the response data as needed
+        } catch (error) {
+            console.error("Error checking word:", error);
         }
     };
 
@@ -56,8 +71,9 @@ const GameScreen = ({ route }) => {
                 placeholder="Enter a letter"
                 maxLength={1}
             />
-            <Button title="LEFT" onPress={() => submitLetter('left')} />
-            <Button title="RIGHT" onPress={() => submitLetter('right')} />
+            <Button title="LEWA" onPress={() => submitLetter('left')} />
+            <Button title="PRAWA" onPress={() => submitLetter('right')} />
+            <Button title="SPRAWDZ" onPress={checkWord} />
         </View>
     );
 };
