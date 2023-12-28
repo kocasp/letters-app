@@ -6,7 +6,7 @@ const SelectRoomScreen = ({ navigation }) => {
     const [roomId, setRoomId] = useState('');
 
     const handleJoinGame = () => {
-        navigation.navigate('Game', { gameData: { id: roomId } });
+        navigation.navigate('Join', { roomId: roomId });
     };
 
     return (
