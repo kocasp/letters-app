@@ -9,13 +9,18 @@ const SelectRoomScreen = ({ navigation }) => {
         navigation.navigate('Join', { roomId: roomId });
     };
 
+    const handleRoomIdChange = (text) => {
+        // Convert the text to uppercase and update the state
+        setRoomId(text.toUpperCase());
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Wpisz kod pokoju:</Text>
             <TextInput
                 style={styles.input}
                 value={roomId}
-                onChangeText={setRoomId}
+                onChangeText={handleRoomIdChange}
                 placeholder="Room ID"
             />
             <Button title="Join Game" onPress={handleJoinGame} />

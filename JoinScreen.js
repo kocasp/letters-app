@@ -9,6 +9,10 @@ const JoinScreen = ({ route }) => {
     const [isJoiningGame, setIsJoiningGame] = useState(false);
     const { roomId } = route.params;
 
+    const handlePlayerNameChange = (text) => {
+        setPlayerName(text.toUpperCase());
+    };
+
     const joinGame = async () => {
         setIsJoiningGame(true);
         try {
@@ -27,7 +31,7 @@ const JoinScreen = ({ route }) => {
                 style={styles.input}
                 placeholder="Enter player name"
                 value={playerName}
-                onChangeText={setPlayerName}
+                onChangeText={handlePlayerNameChange}
             />
             <Button
                 title="Dołącz"
