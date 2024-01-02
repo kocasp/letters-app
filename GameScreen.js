@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Keyboard, Linking } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Keyboard, Linking, TouchableWithoutFeedback } from 'react-native';
 import db from './firebaseConfig';
 import { doc, onSnapshot } from 'firebase/firestore';
 
@@ -136,21 +136,23 @@ const GameScreen = ({ route }) => {
 
     if (roomData.status === 'started' && roomData.currentPlayer === gameData.your_player_hash) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.word}>{roomData.word}</Text>
-                <Text>Twoja kolej</Text>
-                <TextInput
-                    ref={textInputRef}
-                    style={styles.input}
-                    value={letter}
-                    onChangeText={handleLetterChange}
-                    placeholder="Podaj literke"
-                    maxLength={1}
-                />
-                <Button title="LEWA" onPress={() => submitLetter('left')} />
-                <Button title="PRAWA" onPress={() => submitLetter('right')} />
-                <Button title="SPRAWDZ" onPress={checkWord} />
-            </View>)
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.container}>
+                    <Text style={styles.word}>{roomData.word}</Text>
+                    <Text>Twoja kolej</Text>
+                    <TextInput
+                        ref={textInputRef}
+                        style={styles.input}
+                        value={letter}
+                        onChangeText={handleLetterChange}
+                        placeholder="Podaj literke"
+                        maxLength={1}
+                    />
+                    <Button title="LEWA" onPress={() => submitLetter('left')} />
+                    <Button title="PRAWA" onPress={() => submitLetter('right')} />
+                    <Button title="SPRAWDZ" onPress={checkWord} />
+                </View>
+            </TouchableWithoutFeedback>)
     }
 
     if (roomData.status === 'finished') {
@@ -181,19 +183,21 @@ const GameScreen = ({ route }) => {
 
     if (roomData.status === 'check' && roomData.currentPlayer === gameData.your_player_hash) {
         return (
-            <View style={styles.container}>
-                <Text>GRACZ {roomData.players[roomData.lastPlayer]?.playerName} SPRAWDZA!</Text>
-                <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-                <Text style={styles.word}>{roomData.word}</Text>
-                <Text>Podaj swoje słowo:</Text>
-                <TextInput
-                    style={styles.input}
-                    value={explanation}
-                    onChangeText={handleExplanationChange}
-                    placeholder="Słowo"
-                />
-                <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
-            </View>)
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.container}>
+                    <Text>GRACZ {roomData.players[roomData.lastPlayer]?.playerName} SPRAWDZA!</Text>
+                    <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                    <Text style={styles.word}>{roomData.word}</Text>
+                    <Text>Podaj swoje słowo:</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={explanation}
+                        onChangeText={handleExplanationChange}
+                        placeholder="Słowo"
+                    />
+                    <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
+                </View>
+            </TouchableWithoutFeedback>)
     }
 
     return (

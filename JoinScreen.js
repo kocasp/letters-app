@@ -1,6 +1,6 @@
 // JoinScreen.js
 import React, { useState } from 'react';
-import { View, Button, TextInput, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { View, Button, TextInput, Alert, ActivityIndicator, Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const JoinScreen = ({ route }) => {
@@ -26,25 +26,27 @@ const JoinScreen = ({ route }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Enter player name"
-                value={playerName}
-                onChangeText={handlePlayerNameChange}
-            />
-            <Button
-                title="Dołącz"
-                onPress={joinGame}
-                disabled={isJoiningGame}
-            />
-            {isJoiningGame && (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" />
-                    <Text style={styles.loadingText}>Joining game...</Text>
-                </View>
-            )}
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Enter player name"
+                    value={playerName}
+                    onChangeText={handlePlayerNameChange}
+                />
+                <Button
+                    title="Dołącz"
+                    onPress={joinGame}
+                    disabled={isJoiningGame}
+                />
+                {isJoiningGame && (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" />
+                        <Text style={styles.loadingText}>Joining game...</Text>
+                    </View>
+                )}
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 
