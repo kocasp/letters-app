@@ -82,6 +82,11 @@ const GameScreen = ({ route }) => {
 
     const submitExplanation = async () => {
         try {
+            // show alert and dont continue if explananion does not contain current word
+            if (!explanation.includes(word)) {
+                alert("Musisz podać słowo, ktore zawiera aktualne litery.");
+                return;
+            }
             const queryParams = new URLSearchParams({
                 roomName: gameData.id,
                 playerName: gameData.your_player_hash, // Replace with actual playerName if different
