@@ -1,6 +1,6 @@
 // SelectRoomScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
 
 const SelectRoomScreen = ({ navigation }) => {
     const [roomId, setRoomId] = useState('');
@@ -16,6 +16,12 @@ const SelectRoomScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <ImageBackground
+                source={require('./assets/letters_background.png')}
+                resizeMode='repeat'
+                style={styles.backgroundStyle}
+            >
+            
             <Text style={styles.title}>Wpisz kod pokoju:</Text>
             <TextInput
                 style={styles.input}
@@ -24,6 +30,7 @@ const SelectRoomScreen = ({ navigation }) => {
                 placeholder="Room ID"
             />
             <Button title="Join Game" onPress={handleJoinGame} />
+            </ImageBackground>
         </View>
     );
 };
@@ -31,9 +38,16 @@ const SelectRoomScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%', // Ensure it takes full width
+        height: '100%', // Ensure it takes full height
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
+        alignItems: 'center'
+    },
+    backgroundStyle: {
+        width: '100%', // Full width of the screen
+        height: '100%', // Full height of the screen
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     title: {
         fontSize: 20,

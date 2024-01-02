@@ -1,6 +1,6 @@
 // JoinScreen.js
 import React, { useState } from 'react';
-import { View, Button, TextInput, Alert, ActivityIndicator, Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Button, TextInput, Alert, ActivityIndicator, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const JoinScreen = ({ route }) => {
@@ -28,23 +28,30 @@ const JoinScreen = ({ route }) => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter player name"
-                    value={playerName}
-                    onChangeText={handlePlayerNameChange}
-                />
-                <Button
-                    title="Dołącz"
-                    onPress={joinGame}
-                    disabled={isJoiningGame}
-                />
-                {isJoiningGame && (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" />
-                        <Text style={styles.loadingText}>Joining game...</Text>
-                    </View>
-                )}
+
+                <ImageBackground
+                    source={require('./assets/letters_background.png')}
+                    resizeMode='repeat'
+                    style={styles.backgroundStyle}
+                >
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter player name"
+                        value={playerName}
+                        onChangeText={handlePlayerNameChange}
+                    />
+                    <Button
+                        title="Dołącz"
+                        onPress={joinGame}
+                        disabled={isJoiningGame}
+                    />
+                    {isJoiningGame && (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" />
+                            <Text style={styles.loadingText}>Joining game...</Text>
+                        </View>
+                    )}
+                </ImageBackground>
             </View>
         </TouchableWithoutFeedback>
     );
@@ -53,9 +60,16 @@ const JoinScreen = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%', // Ensure it takes full width
+        height: '100%', // Ensure it takes full height
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20
+        alignItems: 'center'
+    },
+    backgroundStyle: {
+        width: '100%', // Full width of the screen
+        height: '100%', // Full height of the screen
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     input: {
         width: '100%',

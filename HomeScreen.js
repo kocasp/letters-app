@@ -1,6 +1,6 @@
 // HomeScreen.js
 import React, { useState } from 'react';
-import { View, Button, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { View, Button, Alert, ActivityIndicator, Text, StyleSheet, ImageBackground } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
     const [isCreatingGame, setIsCreatingGame] = useState(false);
@@ -24,22 +24,28 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Button
-                title="Stwórz grę"
-                onPress={createGame}
-                disabled={isCreatingGame}
-            />
-            <Button
-                title="Dolacz do gry"
-                onPress={joinGame}
-                disabled={isCreatingGame}
-            />
-            {isCreatingGame && (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" />
-                    <Text style={styles.loadingText}>Tworzenie gry...</Text>
-                </View>
-            )}
+            <ImageBackground
+                source={require('./assets/letters_background.png')}
+                resizeMode='repeat'
+                style={styles.backgroundStyle}
+            >
+                <Button
+                    title="Stwórz grę"
+                    onPress={createGame}
+                    disabled={isCreatingGame}
+                />
+                <Button
+                    title="Dolacz do gry"
+                    onPress={joinGame}
+                    disabled={isCreatingGame}
+                />
+                {isCreatingGame && (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" />
+                        <Text style={styles.loadingText}>Tworzenie gry...</Text>
+                    </View>
+                )}
+            </ImageBackground>
         </View>
     );
 };
@@ -47,6 +53,14 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%', // Ensure it takes full width
+        height: '100%', // Ensure it takes full height
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    backgroundStyle: {
+        width: '100%', // Full width of the screen
+        height: '100%', // Full height of the screen
         justifyContent: 'center',
         alignItems: 'center'
     },
