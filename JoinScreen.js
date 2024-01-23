@@ -20,7 +20,7 @@ const JoinScreen = ({ route }) => {
             let json = await response.json();
             navigation.navigate('Game', { gameData: json }); // Navigate to GameScreen with response data
         } catch (error) {
-            Alert.alert('Error', error.message);
+            Alert.alert('Error joining game', error.message);
         }
         setIsJoiningGame(false);
     };

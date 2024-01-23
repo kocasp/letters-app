@@ -10,8 +10,8 @@ const GameScreen = ({ route }) => {
     const { gameData } = route.params;
     const reasons = {
         "word_finished": "ZAKOŃCZONO SŁOWO!",
-        "checked_word_incorect": "PROPONOWANE SŁOWO NIE JEST POPRAWNE!",
-        "checked_word_correct": "PROPONOWANE SŁOWO JEST POPRAWNE!",
+        "checked_word_incorect": `PROPONOWANE SŁOWO NIE JEST POPRAWNE:`,
+        "checked_word_correct": `PROPONOWANE SŁOWO JEST POPRAWNE:`
     }
     const textInputRef = useRef(null);
 
@@ -164,7 +164,7 @@ const GameScreen = ({ route }) => {
         return (
             <View style={styles.container}>
                 <Text>KONIEC GRY!</Text>
-                <Text>{reasons[roomData.reason]}</Text>
+                <Text>{reasons[roomData.reason]} {roomData.explanation}</Text>
                 <Text style={styles.word}>{roomData.word}</Text>
                 <Text>Przegrał gracz: {roomData.players[roomData.lostPlayer]?.playerName}</Text>
                 {roomData.reason !== 'word_incorect' && (
