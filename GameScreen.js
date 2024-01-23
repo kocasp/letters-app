@@ -10,8 +10,8 @@ const GameScreen = ({ route }) => {
     const { gameData } = route.params;
     const reasons = {
         "word_finished": "ZAKOŃCZONO SŁOWO!",
-        "checked_word_incorect": "PROPONOWANE SŁOWO JEST POPRAWNE!",
-        "checked_word_correct": "PROPONOWANE SŁOWO NIE JEST POPRAWNE!",
+        "checked_word_incorect": "PROPONOWANE SŁOWO NIE JEST POPRAWNE!",
+        "checked_word_correct": "PROPONOWANE SŁOWO JEST POPRAWNE!",
     }
     const textInputRef = useRef(null);
 
@@ -39,12 +39,12 @@ const GameScreen = ({ route }) => {
             console.error("Error getting document:", error);
         });
 
-        if (textInputRef.current && roomData && roomData.status === 'started' && roomData.currentPlayer === gameData.your_player_hash) {
-            textInputRef.current.focus();
-        }
+        // if (textInputRef.current && roomData && roomData.status === 'started' && roomData.currentPlayer === gameData.your_player_hash) {
+        //     textInputRef.current.focus();
+        // }
 
         return unsubscribe;
-    }, [gameData.id, roomData]);
+    }, [gameData.id]);
 
     const submitLetter = async (side) => {
         try {
@@ -83,7 +83,7 @@ const GameScreen = ({ route }) => {
     const submitExplanation = async () => {
         try {
             // show alert and dont continue if explananion does not contain current word
-            if (!explanation.includes(word)) {
+            if (!explanation.includes(roomData.word)) {
                 alert("Musisz podać słowo, ktore zawiera aktualne litery.");
                 return;
             }
