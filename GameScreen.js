@@ -80,6 +80,16 @@ const GameScreen = ({ route }) => {
         }
     };
 
+    // Function to render all players' points
+    const renderPlayersPoints = () => {
+        const playersEntries = Object.entries(roomData.players || {}).sort((a, b) => a[0].localeCompare(b[0]));; // Ensuring roomData.players is an object
+        return playersEntries.map(([playerHash, playerDetails]) => (
+            <Text key={playerHash}>
+                {playerDetails.playerName || playerHash}: {playerDetails.points || 0} punktów karnych
+            </Text>
+        ));
+    };
+
     const submitExplanation = async () => {
         try {
             // show alert and dont continue if explananion does not contain current word
@@ -167,6 +177,7 @@ const GameScreen = ({ route }) => {
                 <Text>{reasons[roomData.reason]} {roomData.explanation}</Text>
                 <Text style={styles.word}>{roomData.word}</Text>
                 <Text>Przegrał gracz: {roomData.players[roomData.lostPlayer]?.playerName}</Text>
+                {renderPlayersPoints()}
                 {roomData.reason !== 'word_incorect' && (
                     <Button
                         title="Sprawdz znaczenie slowa"
