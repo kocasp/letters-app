@@ -1,8 +1,10 @@
 // HomeScreen.js
 import React, { useState } from 'react';
-import { View, Button, Alert, ActivityIndicator, Text, Image, StyleSheet, ImageBackground } from 'react-native';
+import { View, Linking, Alert, ActivityIndicator, Text, Image, StyleSheet, ImageBackground } from 'react-native';
 import PrimaryButton from './components/PrimaryButton';
 import SecondaryButton from './components/SecondaryButton';
+import LogoSvg from './components/LogoSvg'
+import MarginWrapper from './components/MarginWrapper';
 
 const HomeScreen = ({ navigation }) => {
     const [isCreatingGame, setIsCreatingGame] = useState(false);
@@ -24,35 +26,50 @@ const HomeScreen = ({ navigation }) => {
         navigation.navigate('Select')
     }
 
+    const handleRulesPress = async () => {
+        const url = 'https://en.wikipedia.org/wiki/Ghost_(game)#Superduperghost';
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            console.log(`Don't know how to open this URL: ${url}`);
+        }
+    };
+
     return (
         <View style={styles.container}>
-            <Image source={require('./assets/logo.svg')} />
             <ImageBackground
                 source={require('./assets/letters_background.png')}
                 resizeMode='repeat'
                 style={styles.backgroundStyle}
             >
-                <PrimaryButton
-                    title="Rozpocznij nową grę"
-                    onPress={createGame}
-                    disabled={isCreatingGame}
-                />
-                <PrimaryButton
-                    title="Dołącz do gry"
-                    onPress={joinGame}
-                    disabled={isCreatingGame}
-                />
-                <SecondaryButton
-                    title="Zasady gry"
-                    onPress={createGame}
-                    disabled={isCreatingGame}
-                />
-                {isCreatingGame && (
-                    <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" />
-                        <Text style={styles.loadingText}>Tworzenie gry...</Text>
-                    </View>
-                )}
+                <MarginWrapper>
+                    <LogoSvg 
+                        style={{marginBottom: 60}}
+                    />
+                    <PrimaryButton
+                        title="Rozpocznij nową grę"
+                        onPress={createGame}
+                        disabled={isCreatingGame}
+                    />
+                    <PrimaryButton
+                        title="Dołącz do gry"
+                        onPress={joinGame}
+                        disabled={isCreatingGame}
+                    />
+                    <SecondaryButton
+                        title="Zasady gry"
+                        onPress={handleRulesPress}
+                        disabled={isCreatingGame}
+                    />
+                    {isCreatingGame && (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" />
+                            <Text style={styles.loadingText}>Tworzenie gry...</Text>
+                        </View>
+                        )}
+                </MarginWrapper>
             </ImageBackground>
         </View>
     );
@@ -70,7 +87,7 @@ const styles = StyleSheet.create({
         width: '100%', // Full width of the screen
         height: '100%', // Full height of the screen
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     loadingContainer: {
         marginTop: 20,
@@ -78,7 +95,7 @@ const styles = StyleSheet.create({
     },
     loadingText: {
         marginTop: 10
-    }
+    },
 });
 
 export default HomeScreen;
