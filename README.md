@@ -1,2 +1,2 @@
 # Instructions
-To start the expo type `npm start`
+To start the expo type `npx expo start`
