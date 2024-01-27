@@ -1,5 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Keyboard, Linking, TouchableWithoutFeedback } from 'react-native';
+import { 
+    View, 
+    Text, 
+    TextInput, 
+    Button, 
+    StyleSheet, 
+    Keyboard, 
+    Linking, 
+    TouchableWithoutFeedback, 
+    ImageBackground,
+} from 'react-native';
 import db from './firebaseConfig';
 import { doc, onSnapshot } from 'firebase/firestore';
 import PrimaryButton from './components/PrimaryButton';
@@ -135,11 +145,19 @@ const GameScreen = ({ route }) => {
 
     if (roomData.status === 'waiting_for_player') {
         return(
-            <View style={styles.container}>
-                <Text>Nazwa pokoju gry:</Text>
-                <Text style={styles.roomName}>{gameData.id}</Text>
-                <Text>Oczekiwanie na drugiego gracza ...</Text>
-            </View>)
+
+            <ImageBackground
+                source={require('./assets/background.png')}
+                resizeMode='repeat'
+                style={styles.backgroundStyle}
+            >
+                <View style={styles.container}>
+                    <Text style={{marginBottom: 30}}>Oczekiwanie na pozostałych graczy</Text>
+                    <Text style={styles.roomName}>{gameData.id}</Text>
+                    <Text style={{ textAlign: "center", marginTop: 30 }}>Podaj kod pokoju znajomemu aby mógł{"\n"} dołączyć do gry</Text>
+                </View>
+            </ImageBackground>
+            )
     }
 
     if (roomData.status === 'started' && roomData.currentPlayer !== gameData.your_player_hash) {
@@ -265,11 +283,20 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     roomName: {
-        fontSize: 50,
+        fontSize: "40px",
+        color: "#4A4A4A",
+        textAlign: "center",
+        fontWeight: "bold",
     },
     debug: {
         fontSize: 6,
-    }
+    },
+    backgroundStyle: {
+        width: '100%', // Full width of the screen
+        height: '100%', // Full height of the screen
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
 
 export default GameScreen;
