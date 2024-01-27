@@ -1,13 +1,15 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
-const PrimaryInput = ({ style, value, onChangeText, placeholder }) => (
+const PrimaryInput = ({ style, value, onChangeText, placeholder, ref, maxInput }) => (
     <View style={styles.inputWrapper}>
         <TextInput
             style={[styles.input, style]}
             value={value}
             onChangeText={onChangeText}
             placeholder={placeholder}
+            ref={ref}
+            maxInput={maxInput}
         />
     </View>
 );

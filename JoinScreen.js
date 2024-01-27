@@ -43,7 +43,7 @@ const JoinScreen = ({ route }) => {
                             onChangeText={handlePlayerNameChange}
                         />
                         <PrimaryButton
-                            title="Załóż pokój"
+                            title="Start"
                             onPress={joinGame}
                             disabled={isJoiningGame}
                         />
