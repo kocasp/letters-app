@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Keyboard, Linking, TouchableWithoutFeedback } from 'react-native';
 import db from './firebaseConfig';
 import { doc, onSnapshot } from 'firebase/firestore';
+import PrimaryButton from './components/PrimaryButton';
 
 const GameScreen = ({ route }) => {
     const [roomData, setRoomData] = useState(null);
@@ -130,7 +131,7 @@ const GameScreen = ({ route }) => {
         }
     };
 
-    if (!roomData) return <Text>Loading...</Text>;
+    if (!roomData) return <Text>Ładowanie...</Text>;
 
     if (roomData.status === 'waiting_for_player') {
         return(

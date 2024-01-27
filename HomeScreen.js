@@ -1,6 +1,8 @@
 // HomeScreen.js
 import React, { useState } from 'react';
-import { View, Button, Alert, ActivityIndicator, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Button, Alert, ActivityIndicator, Text, Image, StyleSheet, ImageBackground } from 'react-native';
+import PrimaryButton from './components/PrimaryButton';
+import SecondaryButton from './components/SecondaryButton';
 
 const HomeScreen = ({ navigation }) => {
     const [isCreatingGame, setIsCreatingGame] = useState(false);
@@ -24,19 +26,25 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <Image source={require('./assets/logo.svg')} />
             <ImageBackground
                 source={require('./assets/letters_background.png')}
                 resizeMode='repeat'
                 style={styles.backgroundStyle}
             >
-                <Button
-                    title="Stwórz grę"
+                <PrimaryButton
+                    title="Rozpocznij nową grę"
                     onPress={createGame}
                     disabled={isCreatingGame}
                 />
-                <Button
-                    title="Dolacz do gry"
+                <PrimaryButton
+                    title="Dołącz do gry"
                     onPress={joinGame}
+                    disabled={isCreatingGame}
+                />
+                <SecondaryButton
+                    title="Zasady gry"
+                    onPress={createGame}
                     disabled={isCreatingGame}
                 />
                 {isCreatingGame && (
