@@ -171,21 +171,27 @@ const GameScreen = ({ route }) => {
     if (roomData.status === 'started' && roomData.currentPlayer === gameData.your_player_hash) {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View style={styles.container}>
-                    <Text style={styles.word}>{roomData.word}</Text>
-                    <Text>Twoja kolej</Text>
-                    <TextInput
-                        ref={textInputRef}
-                        style={styles.input}
-                        value={letter}
-                        onChangeText={handleLetterChange}
-                        placeholder="Podaj literke"
-                        maxLength={1}
-                    />
-                    <Button title="LEWA" onPress={() => submitLetter('left')} />
-                    <Button title="PRAWA" onPress={() => submitLetter('right')} />
-                    <Button title="SPRAWDZ" onPress={checkWord} />
-                </View>
+                <ImageBackground
+                    source={require('./assets/background.png')}
+                    resizeMode='repeat'
+                    style={styles.backgroundStyle}
+                >
+                    <View style={styles.container}>
+                        <Text style={styles.word}>{roomData.word}</Text>
+                        <Text>Twoja kolej</Text>
+                        <TextInput
+                            ref={textInputRef}
+                            style={styles.input}
+                            value={letter}
+                            onChangeText={handleLetterChange}
+                            placeholder="Podaj literke"
+                            maxLength={1}
+                        />
+                        <Button title="LEWA" onPress={() => submitLetter('left')} />
+                        <Button title="PRAWA" onPress={() => submitLetter('right')} />
+                        <Button title="SPRAWDZ" onPress={checkWord} />
+                    </View>
+                </ImageBackground>
             </TouchableWithoutFeedback>)
     }
 
