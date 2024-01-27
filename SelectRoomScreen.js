@@ -1,6 +1,9 @@
 // SelectRoomScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
+import PrimaryInput from './components/PrimaryInput';
+import PrimaryButton from './components/PrimaryButton';
+import MarginWrapper from './components/MarginWrapper';
 
 const SelectRoomScreen = ({ navigation }) => {
     const [roomId, setRoomId] = useState('');
@@ -17,19 +20,20 @@ const SelectRoomScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('./assets/letters_background.png')}
+                source={require('./assets/background.png')}
                 resizeMode='repeat'
                 style={styles.backgroundStyle}
             >
+                <MarginWrapper>
             
-            <Text style={styles.title}>Wpisz kod pokoju:</Text>
-            <TextInput
-                style={styles.input}
-                value={roomId}
-                onChangeText={handleRoomIdChange}
-                placeholder="Room ID"
-            />
-            <Button title="Join Game" onPress={handleJoinGame} />
+                    <Text style={styles.title}>Wpisz kod pokoju:</Text>
+                    <PrimaryInput
+                        value={roomId}
+                        onChangeText={handleRoomIdChange}
+                        placeholder="Kod pokoju"
+                    />
+                    <PrimaryButton title="Dołącz do gry" onPress={handleJoinGame} />
+                </MarginWrapper>
             </ImageBackground>
         </View>
     );
@@ -53,13 +57,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 10,
     },
-    input: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#ddd',
-        padding: 10,
-        marginBottom: 20,
-    }
 });
 
 export default SelectRoomScreen;

@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingLeft: 30,
         paddingRight: 30,
+        maxWidth: 500,
     },
 });
 

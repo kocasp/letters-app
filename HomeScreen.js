@@ -42,7 +42,6 @@ const HomeScreen = ({ navigation }) => {
             <ImageBackground
                 source={require('./assets/background.png')}
                 resizeMode='repeat'
-                width={300}
                 style={styles.backgroundStyle}
             >
                 <MarginWrapper>

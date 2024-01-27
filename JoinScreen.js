@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { View, Button, TextInput, Alert, ActivityIndicator, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import PrimaryInput from './components/PrimaryInput';
+import PrimaryButton from './components/PrimaryButton';
+import MarginWrapper from './components/MarginWrapper';
 
 const JoinScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -28,29 +31,29 @@ const JoinScreen = ({ route }) => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
-
                 <ImageBackground
-                    source={require('./assets/letters_background.png')}
+                    source={require('./assets/background.png')}
                     resizeMode='repeat'
                     style={styles.backgroundStyle}
                 >
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter player name"
-                        value={playerName}
-                        onChangeText={handlePlayerNameChange}
-                    />
-                    <Button
-                        title="Dołącz"
-                        onPress={joinGame}
-                        disabled={isJoiningGame}
-                    />
-                    {isJoiningGame && (
-                        <View style={styles.loadingContainer}>
-                            <ActivityIndicator size="large" />
-                            <Text style={styles.loadingText}>Joining game...</Text>
-                        </View>
-                    )}
+                    <MarginWrapper>
+                        <PrimaryInput
+                            placeholder="Podaj imię"
+                            value={playerName}
+                            onChangeText={handlePlayerNameChange}
+                        />
+                        <PrimaryButton
+                            title="Załóż pokój"
+                            onPress={joinGame}
+                            disabled={isJoiningGame}
+                        />
+                        {isJoiningGame && (
+                            <View style={styles.loadingContainer}>
+                                <ActivityIndicator size="large" />
+                                <Text style={styles.loadingText}>Dołączanie...</Text>
+                            </View>
+                        )}
+                    </MarginWrapper>
                 </ImageBackground>
             </View>
         </TouchableWithoutFeedback>
@@ -70,13 +73,6 @@ const styles = StyleSheet.create({
         height: '100%', // Full height of the screen
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    input: {
-        width: '100%',
-        marginBottom: 20,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ddd'
     },
     loadingContainer: {
         marginTop: 20,
