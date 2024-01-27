@@ -40,8 +40,9 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('./assets/letters_background.png')}
+                source={require('./assets/background.png')}
                 resizeMode='repeat'
+                width={300}
                 style={styles.backgroundStyle}
             >
                 <MarginWrapper>
