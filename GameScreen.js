@@ -188,8 +188,10 @@ const GameScreen = ({ route }) => {
                                 placeholder="Podaj literke"
                                 maxLength={1}
                             />
-                            <PrimaryButton title="LEWA" onPress={() => submitLetter('left')} />
-                            <PrimaryButton title="PRAWA" onPress={() => submitLetter('right')} />
+                            <View style={styles.sideButtonsWrapper}>
+                                <PrimaryButton title="LEWA" onPress={() => submitLetter('left')} style={{flex: 1, marginLeft: 0}} />
+                                <PrimaryButton title="PRAWA" onPress={() => submitLetter('right')} style={{flex: 1, marginRight: 0}} />
+                            </View>
                             <PrimaryButton title="SPRAWDZ" onPress={checkWord} />
                         </MarginWrapper>
                     </ImageBackground>
@@ -305,6 +307,10 @@ const styles = StyleSheet.create({
         height: '100%', // Full height of the screen
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    sideButtonsWrapper: {
+        flex: 0,
+        flexDirection: 'row',
     },
 });
 
