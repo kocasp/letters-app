@@ -13,7 +13,7 @@ const JoinScreen = ({ route }) => {
     const { roomId } = route.params;
 
     const handlePlayerNameChange = (text) => {
-        setPlayerName(text.toUpperCase());
+        setPlayerName(text);
     };
 
     const joinGame = async () => {

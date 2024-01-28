@@ -36,7 +36,7 @@ const GameScreen = ({ route }) => {
     };
 
     const handleExplanationChange = (text) => {
-        setExplanation(text.toUpperCase());
+        setExplanation(text);
     };
 
     useEffect(() => {
@@ -165,9 +165,19 @@ const GameScreen = ({ route }) => {
     if (roomData.status === 'started' && roomData.currentPlayer !== gameData.your_player_hash) {
         return (
             <View style={styles.container}>
-                <Text style={styles.word}>{roomData.word}</Text>
-                <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-            </View>)
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <ImageBackground
+                        source={require('./assets/background.png')}
+                        resizeMode='repeat'
+                        style={styles.backgroundStyle}
+                    >
+                        <MarginWrapper>
+                            <Text style={styles.word}>{roomData.word}</Text>
+                            <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                        </MarginWrapper>
+                    </ImageBackground>
+                </TouchableWithoutFeedback>
+            </View >)
     }
 
     if (roomData.status === 'started' && roomData.currentPlayer === gameData.your_player_hash) {
@@ -228,48 +238,63 @@ const GameScreen = ({ route }) => {
 
     if (roomData.status === 'check' && roomData.currentPlayer === gameData.your_player_hash) {
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View style={styles.container}>
-                    <Text>GRACZ {roomData.players[roomData.lastPlayer]?.playerName} SPRAWDZA!</Text>
-                    <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-                    <Text style={styles.word}>{roomData.word}</Text>
-                    <Text>Podaj swoje słowo:</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={explanation}
-                        onChangeText={handleExplanationChange}
-                        placeholder="Słowo"
-                    />
-                    <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
-                </View>
-            </TouchableWithoutFeedback>)
+            <View style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <ImageBackground
+                        source={require('./assets/background.png')}
+                        resizeMode='repeat'
+                        style={styles.backgroundStyle}
+                    >
+                        <Text>GRACZ {roomData.players[roomData.lastPlayer]?.playerName} SPRAWDZA!</Text>
+                        <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                        <Text style={styles.word}>{roomData.word}</Text>
+                        <Text>Podaj swoje słowo:</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={explanation}
+                            onChangeText={handleExplanationChange}
+                            placeholder="Słowo"
+                        />
+                        <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
+                    </ImageBackground>
+            </TouchableWithoutFeedback>
+           </View>
+           )
     }
 
     return (
         <View style={styles.container}>
-            <Text>pokoj: {gameData.id}</Text>
-            <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-            <Text style={styles.word}>{roomData.word}</Text>
-            <TextInput
-                style={styles.input}
-                value={letter}
-                onChangeText={handleLetterChange}
-                placeholder="Podaj literke"
-                maxLength={1}
-            />
-            <Button title="LEWA" onPress={() => submitLetter('left')} />
-            <Button title="PRAWA" onPress={() => submitLetter('right')} />
-            <Button title="SPRAWDZ" onPress={checkWord} />
-            <TextInput
-                style={styles.input}
-                value={explanation}
-                onChangeText={setExplanation}
-                placeholder="Slowo"
-            />
-            <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
-            <Button title="NOWA GRA" onPress={submitNewGame} />
-            <Text>your player: {gameData.your_player_hash}</Text>
-            <Text style={styles.debug}>{JSON.stringify(roomData, null, 4)}</Text>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <ImageBackground
+                    source={require('./assets/background.png')}
+                    resizeMode='repeat'
+                    style={styles.backgroundStyle}
+                >
+                    <Text>pokoj: {gameData.id}</Text>
+                    <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                    <Text style={styles.word}>{roomData.word}</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={letter}
+                        onChangeText={handleLetterChange}
+                        placeholder="Podaj literke"
+                        maxLength={1}
+                    />
+                    <Button title="LEWA" onPress={() => submitLetter('left')} />
+                    <Button title="PRAWA" onPress={() => submitLetter('right')} />
+                    <Button title="SPRAWDZ" onPress={checkWord} />
+                    <TextInput
+                        style={styles.input}
+                        value={explanation}
+                        onChangeText={setExplanation}
+                        placeholder="Slowo"
+                    />
+                    <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
+                    <Button title="NOWA GRA" onPress={submitNewGame} />
+                    <Text>your player: {gameData.your_player_hash}</Text>
+                    <Text style={styles.debug}>{JSON.stringify(roomData, null, 4)}</Text>
+                </ImageBackground>
+            </TouchableWithoutFeedback>
         </View>
     );
 };

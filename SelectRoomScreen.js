@@ -14,7 +14,7 @@ const SelectRoomScreen = ({ navigation }) => {
 
     const handleRoomIdChange = (text) => {
         // Convert the text to uppercase and update the state
-        setRoomId(text.toUpperCase());
+        setRoomId(text);
     };
 
     return (
