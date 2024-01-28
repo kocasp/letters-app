@@ -22,9 +22,9 @@ const GameScreen = ({ route }) => {
     const [explanation, setExplanation] = useState('');
     const { gameData } = route.params;
     const reasons = {
-        "word_finished": "ZAKOŃCZONO SŁOWO!",
-        "checked_word_incorect": `PROPONOWANE SŁOWO NIE JEST POPRAWNE:`,
-        "checked_word_correct": `PROPONOWANE SŁOWO JEST POPRAWNE:`
+        "word_finished": "Zakończono słowo!",
+        "checked_word_incorect": `Proponowane słowo nie jest poprawne:`,
+        "checked_word_correct": `Proponowane słowo jest poprawne:`
     }
     const textInputRef = useRef(null);
 
@@ -106,7 +106,7 @@ const GameScreen = ({ route }) => {
     const submitExplanation = async () => {
         try {
             // show alert and dont continue if explananion does not contain current word
-            if (!explanation.includes(roomData.word)) {
+            if (!explanation.toLowerCase().includes(roomData.word.toLowerCase())) {
                 alert("Musisz podać słowo, ktore zawiera aktualne litery.");
                 return;
             }
@@ -115,7 +115,7 @@ const GameScreen = ({ route }) => {
                 playerName: gameData.your_player_hash, // Replace with actual playerName if different
                 word: explanation,
             }).toString();
-
+            setExplanation(null);
             const url = `https://us-central1-letters-9e7e6.cloudfunctions.net/explainWord?${queryParams}`;
             const response = await fetch(url);
             // const responseData = await response.json();
@@ -212,28 +212,48 @@ const GameScreen = ({ route }) => {
     if (roomData.status === 'finished') {
         return (
             <View style={styles.container}>
-                <Text>KONIEC GRY!</Text>
-                <Text>{reasons[roomData.reason]} {roomData.explanation}</Text>
-                <Text style={styles.word}>{roomData.word}</Text>
-                <Text>Przegrał gracz: {roomData.players[roomData.lostPlayer]?.playerName}</Text>
-                {renderPlayersPoints()}
-                {roomData.reason !== 'word_incorect' && (
-                    <Button
-                        title="Sprawdz znaczenie slowa"
-                        onPress={() => Linking.openURL('https://www.sjp.pl/'+roomData.word)}
-                    />
-                )}
-                <Button title="NOWA GRA" onPress={submitNewGame} />
-            </View>)
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <ImageBackground
+                            source={require('./assets/background.png')}
+                            resizeMode='repeat'
+                            style={styles.backgroundStyle}
+                        >
+                        <MarginWrapper>
+                            <Text>Koniec gry!</Text>
+                            <Text>{reasons[roomData.reason]} {roomData.explanation}</Text>
+                            <Text style={styles.word}>{roomData.word}</Text>
+                            <Text>Przegrał gracz: {roomData.players[roomData.lostPlayer]?.playerName}</Text>
+                            {renderPlayersPoints()}
+                            {roomData.reason !== 'word_incorect' && (
+                                <PrimaryButton
+                                    title="SPRAWDŹ ZNACZENIE"
+                                    onPress={() => Linking.openURL('https://www.sjp.pl/'+roomData.word)}
+                                />
+                            )}
+                            <PrimaryButton title="NOWA RUNDA" onPress={submitNewGame} />
+                        </MarginWrapper>
+                    </ImageBackground>
+                </TouchableWithoutFeedback>
+            </View >)
     }
 
     if (roomData.status === 'check' && roomData.currentPlayer !== gameData.your_player_hash) {
         return (
             <View style={styles.container}>
-                <Text>GRACZ {roomData.players[roomData.lastPlayer]?.playerName} SPRAWDZA!</Text>
-                <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-                <Text style={styles.word}>{roomData.word}</Text>
-            </View>)
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <ImageBackground
+                        source={require('./assets/background.png')}
+                        resizeMode='repeat'
+                        style={styles.backgroundStyle}
+                    >
+                        <MarginWrapper>
+                            <Text>Gracz {roomData.players[roomData.lastPlayer]?.playerName} sprawdza!</Text>
+                            <Text>Teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                            <Text style={styles.word}>{roomData.word}</Text>
+                        </MarginWrapper>
+                    </ImageBackground>
+                </TouchableWithoutFeedback>
+            </View >)
     }
 
     if (roomData.status === 'check' && roomData.currentPlayer === gameData.your_player_hash) {
@@ -245,19 +265,20 @@ const GameScreen = ({ route }) => {
                         resizeMode='repeat'
                         style={styles.backgroundStyle}
                     >
-                        <Text>GRACZ {roomData.players[roomData.lastPlayer]?.playerName} SPRAWDZA!</Text>
-                        <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-                        <Text style={styles.word}>{roomData.word}</Text>
-                        <Text>Podaj swoje słowo:</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={explanation}
-                            onChangeText={handleExplanationChange}
-                            placeholder="Słowo"
-                        />
-                        <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
+                        <MarginWrapper>
+                            <Text>Gracz {roomData.players[roomData.lastPlayer]?.playerName} sprawdza!</Text>
+                            <Text>Teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                            <Text style={styles.word}>{roomData.word}</Text>
+                            <Text>Podaj swoje słowo:</Text>
+                            <PrimaryInput
+                                value={explanation}
+                                onChangeText={handleExplanationChange}
+                                placeholder="Słowo"
+                            />
+                            <PrimaryButton title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
+                        </MarginWrapper>
                     </ImageBackground>
-            </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback>
            </View>
            )
     }
@@ -290,7 +311,7 @@ const GameScreen = ({ route }) => {
                         placeholder="Slowo"
                     />
                     <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
-                    <Button title="NOWA GRA" onPress={submitNewGame} />
+                    <Button title="NOWA RUNDA" onPress={submitNewGame} />
                     <Text>your player: {gameData.your_player_hash}</Text>
                     <Text style={styles.debug}>{JSON.stringify(roomData, null, 4)}</Text>
                 </ImageBackground>
