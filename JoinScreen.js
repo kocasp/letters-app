@@ -17,46 +17,49 @@ const JoinScreen = ({ route }) => {
     };
 
     const joinGame = async () => {
+        if(!playerName) {
+            Alert.alert('Podaj imie gracza');
+            return;
+        }
         setIsJoiningGame(true);
         try {
             let response = await fetch(`https://us-central1-letters-9e7e6.cloudfunctions.net/joinRoom?playerName=${encodeURIComponent(playerName)}&roomName=${encodeURIComponent(roomId)}`);
             let json = await response.json();
             navigation.navigate('Game', { gameData: json }); // Navigate to GameScreen with response data
         } catch (error) {
-            Alert.alert('Error joining game', error.message);
+            Alert.alert('Blad dolaczania. Sprawdz kod pokoju.', error.message);
+            navigation.navigate('Select');
         }
         setIsJoiningGame(false);
     };
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
-                <ImageBackground
-                    source={require('./assets/background.png')}
-                    resizeMode='repeat'
-                    style={styles.backgroundStyle}
-                >
-                    <MarginWrapper>
-                        <PrimaryInput
-                            placeholder="Podaj imię"
-                            value={playerName}
-                            onChangeText={handlePlayerNameChange}
-                        />
-                        <PrimaryButton
-                            title="Start"
-                            onPress={joinGame}
-                            disabled={isJoiningGame}
-                        />
-                        {isJoiningGame && (
-                            <View style={styles.loadingContainer}>
-                                <ActivityIndicator size="large" />
-                                <Text style={styles.loadingText}>Dołączanie...</Text>
-                            </View>
-                        )}
-                    </MarginWrapper>
-                </ImageBackground>
-            </View>
-        </TouchableWithoutFeedback>
+        <View style={styles.container}>
+            <ImageBackground
+                source={require('./assets/background.png')}
+                resizeMode='repeat'
+                style={styles.backgroundStyle}
+            >
+                <MarginWrapper>
+                    <PrimaryInput
+                        placeholder="Podaj imię"
+                        value={playerName}
+                        onChangeText={handlePlayerNameChange}
+                    />
+                    <PrimaryButton
+                        title="Start"
+                        onPress={joinGame}
+                        disabled={isJoiningGame}
+                    />
+                    {isJoiningGame && (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" />
+                            <Text style={styles.loadingText}>Dołączanie...</Text>
+                        </View>
+                    )}
+                </MarginWrapper>
+            </ImageBackground>
+        </View>
     );
 };
 

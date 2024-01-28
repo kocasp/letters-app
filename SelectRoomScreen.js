@@ -31,6 +31,7 @@ const SelectRoomScreen = ({ navigation }) => {
                         value={roomId}
                         onChangeText={handleRoomIdChange}
                         placeholder="Kod pokoju"
+                        maxLength={6}
                     />
                     <PrimaryButton title="Dołącz do gry" onPress={handleJoinGame} />
                 </MarginWrapper>
