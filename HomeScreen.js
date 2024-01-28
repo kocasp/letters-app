@@ -10,15 +10,15 @@ const HomeScreen = ({ navigation }) => {
     const [isCreatingGame, setIsCreatingGame] = useState(false);
 
     const createGame = async () => {
-        setIsCreatingGame(true); // Disable button when request starts
         try {
+            setIsCreatingGame(true); // Disable button when request starts
             let response = await fetch('https://us-central1-letters-9e7e6.cloudfunctions.net/createRoom');
             let json = await response.json();
+            setIsCreatingGame(false); // Re-enable button after request completes
             navigation.navigate('Join', { roomId: json.id });
         } catch (error) {
             Alert.alert('Error', 'Unable to create room');
         }
-        setIsCreatingGame(false); // Re-enable button after request completes
     };
 
     const joinGame = async () => {

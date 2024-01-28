@@ -9,14 +9,18 @@ import {
     Linking, 
     TouchableWithoutFeedback, 
     ImageBackground,
+    Alert,
 } from 'react-native';
 import db from './firebaseConfig';
 import { doc, onSnapshot } from 'firebase/firestore';
 import PrimaryButton from './components/PrimaryButton';
+import SecondaryButton from './components/SecondaryButton';
 import PrimaryInput from './components/PrimaryInput';
 import MarginWrapper from './components/MarginWrapper';
+import { useNavigation } from '@react-navigation/native';
 
 const GameScreen = ({ route }) => {
+    const navigation = useNavigation();
     const [roomData, setRoomData] = useState(null);
     const [letter, setLetter] = useState('');
     const [explanation, setExplanation] = useState('');
@@ -75,6 +79,28 @@ const GameScreen = ({ route }) => {
             console.error("Error submitting letter:", error);
         }
     };
+
+    const exitGame = async () => {
+        try {
+            Alert.alert(
+                "Opuść grę",
+                "Jesteś pewien?",
+                [
+                    { 
+                        text: "Nie", 
+                        onPress: () => console.log("Cancelled"), 
+                        style: "cancel"
+                    },
+                    { 
+                        text: "Tak", 
+                        onPress: () => navigation.navigate('Home'),
+                    },
+                ]
+            );
+        } catch (error) {
+            console.error("Error exiting game:", error);
+        }
+    }
 
     const checkWord = async () => {
         try {
@@ -148,17 +174,22 @@ const GameScreen = ({ route }) => {
     if (roomData.status === 'waiting_for_player') {
         return(
 
-            <ImageBackground
-                source={require('./assets/background.png')}
-                resizeMode='repeat'
-                style={styles.backgroundStyle}
-            >
-                <View style={styles.container}>
-                    <Text style={{marginBottom: 30}}>Oczekiwanie na pozostałych graczy</Text>
-                    <Text style={styles.roomName}>{gameData.id}</Text>
-                    <Text style={{ textAlign: "center", marginTop: 30 }}>Podaj kod pokoju znajomemu aby mógł{"\n"} dołączyć do gry</Text>
-                </View>
-            </ImageBackground>
+            <View style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <ImageBackground
+                        source={require('./assets/background.png')}
+                        resizeMode='repeat'
+                        style={styles.backgroundStyle}
+                    >
+                        <MarginWrapper>
+                            <Text style={{marginBottom: 30}}>Oczekiwanie na pozostałych graczy</Text>
+                            <Text style={styles.roomName}>{gameData.id}</Text>
+                            <Text style={{ textAlign: "center", marginTop: 30 }}>Podaj kod pokoju znajomemu aby mógł{"\n"} dołączyć do gry</Text>
+                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                        </MarginWrapper>
+                    </ImageBackground>
+                </TouchableWithoutFeedback>
+            </View >
             )
     }
 
@@ -174,6 +205,7 @@ const GameScreen = ({ route }) => {
                         <MarginWrapper>
                             <Text style={styles.word}>{roomData.word}</Text>
                             <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -203,6 +235,7 @@ const GameScreen = ({ route }) => {
                                 <PrimaryButton title="PRAWA" onPress={() => submitLetter('right')} style={{flex: 1, marginRight: 0}} />
                             </View>
                             <PrimaryButton title="SPRAWDZ" onPress={checkWord} />
+                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -231,6 +264,7 @@ const GameScreen = ({ route }) => {
                                 />
                             )}
                             <PrimaryButton title="NOWA RUNDA" onPress={submitNewGame} />
+                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -250,6 +284,7 @@ const GameScreen = ({ route }) => {
                             <Text>Gracz {roomData.players[roomData.lastPlayer]?.playerName} sprawdza!</Text>
                             <Text>Teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
                             <Text style={styles.word}>{roomData.word}</Text>
+                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -276,6 +311,7 @@ const GameScreen = ({ route }) => {
                                 placeholder="Słowo"
                             />
                             <PrimaryButton title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
+                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
