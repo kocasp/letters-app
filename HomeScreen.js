@@ -22,7 +22,6 @@ const HomeScreen = ({ navigation }) => {
     };
 
     const joinGame = async () => {
-        setIsCreatingGame(true);
         navigation.navigate('Select')
     }
 

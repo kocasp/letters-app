@@ -18,6 +18,8 @@ import SecondaryButton from './components/SecondaryButton';
 import PrimaryInput from './components/PrimaryInput';
 import MarginWrapper from './components/MarginWrapper';
 import { useNavigation } from '@react-navigation/native';
+import { Audio } from 'expo-av';
+
 
 const GameScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -25,6 +27,7 @@ const GameScreen = ({ route }) => {
     const [letter, setLetter] = useState('');
     const [explanation, setExplanation] = useState('');
     const { gameData } = route.params;
+    const [sound, setSound] = useState();
     const reasons = {
         "word_finished": "Zakończono słowo!",
         "checked_word_incorect": `Proponowane słowo nie jest poprawne:`,
@@ -62,6 +65,30 @@ const GameScreen = ({ route }) => {
 
         return unsubscribe;
     }, [gameData.id]);
+
+    useEffect(() => {
+        const playSound = async () => {
+            if (roomData && roomData.word && gameData.your_player_hash === roomData.currentPlayer) {
+                try {
+                    const { sound: newSound } = await Audio.Sound.createAsync(require('./assets/audio/letter_added.mp3'));
+                    setSound(newSound);
+                    await newSound.playAsync();
+                } catch (error) {
+                    console.error('Error playing sound:', error);
+                }
+            }
+        };
+    
+        playSound();
+    
+        // Don't forget to unload the sound when component unmounts or when the sound changes
+        return () => {
+            if (sound) {
+                sound.unloadAsync();
+            }
+        };
+    }, [roomData ? roomData.word : null]);
+    
 
     const submitLetter = async (side) => {
         try {
@@ -327,29 +354,7 @@ const GameScreen = ({ route }) => {
                     resizeMode='repeat'
                     style={styles.backgroundStyle}
                 >
-                    <Text>pokoj: {gameData.id}</Text>
-                    <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-                    <Text style={styles.word}>{roomData.word}</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={letter}
-                        onChangeText={handleLetterChange}
-                        placeholder="Podaj literke"
-                        maxLength={1}
-                    />
-                    <Button title="LEWA" onPress={() => submitLetter('left')} />
-                    <Button title="PRAWA" onPress={() => submitLetter('right')} />
-                    <Button title="SPRAWDZ" onPress={checkWord} />
-                    <TextInput
-                        style={styles.input}
-                        value={explanation}
-                        onChangeText={setExplanation}
-                        placeholder="Slowo"
-                    />
-                    <Button title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
-                    <Button title="NOWA RUNDA" onPress={submitNewGame} />
-                    <Text>your player: {gameData.your_player_hash}</Text>
-                    <Text style={styles.debug}>{JSON.stringify(roomData, null, 4)}</Text>
+                    <Text>ERROR</Text>
                 </ImageBackground>
             </TouchableWithoutFeedback>
         </View>
@@ -391,8 +396,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     sideButtonsWrapper: {
-        flex: 0,
         flexDirection: 'row',
+        alignItems: 'stretch',
+        alignContent: 'stretch',
     },
 });
 
