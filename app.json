@@ -2,7 +2,7 @@
   "expo": {
     "name": "letters",
     "slug": "letters",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -31,6 +31,16 @@
         "projectId": "a924b737-df29-401c-be16-4e796efe4c10"
       }
     },
-    "owner": "kocasp"
+    "owner": "kocasp",
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }
