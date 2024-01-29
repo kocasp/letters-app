@@ -26,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
     }
 
     const handleRulesPress = async () => {
-        const url = 'https://en.wikipedia.org/wiki/Ghost_(game)#Superduperghost';
+        const url = 'https://en.wikipedia.org/wiki/Ghost_(game)#Superghost';
         const supported = await Linking.canOpenURL(url);
 
         if (supported) {
