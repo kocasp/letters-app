@@ -10,15 +10,18 @@ import {
     TouchableWithoutFeedback, 
     ImageBackground,
     Alert,
+    Image,
 } from 'react-native';
 import db from './firebaseConfig';
 import { doc, onSnapshot } from 'firebase/firestore';
 import PrimaryButton from './components/PrimaryButton';
+import ExitButton from './components/ExitButton';
 import SecondaryButton from './components/SecondaryButton';
 import PrimaryInput from './components/PrimaryInput';
 import MarginWrapper from './components/MarginWrapper';
 import { useNavigation } from '@react-navigation/native';
 import { Audio } from 'expo-av';
+import * as Clipboard from 'expo-clipboard';
 
 
 const GameScreen = ({ route }) => {
@@ -150,8 +153,8 @@ const GameScreen = ({ route }) => {
     const renderPlayersPoints = () => {
         const playersEntries = Object.entries(roomData.players || {}).sort((a, b) => a[0].localeCompare(b[0]));; // Ensuring roomData.players is an object
         return playersEntries.map(([playerHash, playerDetails]) => (
-            <Text key={playerHash}>
-                {playerDetails.playerName || playerHash}: {playerDetails.points || 0} punktów karnych
+            <Text key={playerHash} style={styles.playerPoints}>
+                {playerDetails.playerName.toUpperCase() || playerHash}: {playerDetails.points || 0}
             </Text>
         ));
     };
@@ -199,6 +202,12 @@ const GameScreen = ({ route }) => {
     if (!roomData) return <Text>Ładowanie...</Text>;
 
     if (roomData.status === 'waiting_for_player') {
+        
+        const copyToClipboard = async () => {
+            await Clipboard.setStringAsync(gameData.id);
+            alert('Kod został skopiowany do schowka!');
+        };
+
         return(
 
             <View style={styles.container}>
@@ -210,9 +219,9 @@ const GameScreen = ({ route }) => {
                     >
                         <MarginWrapper>
                             <Text style={{marginBottom: 30}}>Oczekiwanie na pozostałych graczy</Text>
-                            <Text style={styles.roomName}>{gameData.id}</Text>
-                            <Text style={{ textAlign: "center", marginTop: 30 }}>Podaj kod pokoju znajomemu aby mógł{"\n"} dołączyć do gry</Text>
-                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                            <Text onPress={copyToClipboard} style={styles.roomName}>{gameData.id}</Text>
+                            <Text style={{color: '#aaaaaa'}}>Kliknij kod aby skopiowac do schowka</Text>
+                            <Text style={{ textAlign: "center", marginTop: 30, marginBottom: 30 }}>Podaj kod pokoju znajomemu aby mógł{"\n"} dołączyć do gry</Text>
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -230,9 +239,15 @@ const GameScreen = ({ route }) => {
                         style={styles.backgroundStyle}
                     >
                         <MarginWrapper>
+                            <View style={styles.exitButtonWrapper}>
+                                <ExitButton onPress={exitGame}/>
+                            </View>
+                            <View style={styles.pointsWrapper}>
+                                {renderPlayersPoints()}
+                            </View>
                             <Text style={styles.word}>{roomData.word}</Text>
-                            <Text>teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
-                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                            <Image source={require('./assets/loader.gif')} style={{ width: 45, height: 15, marginBottom: 20 }} />
+                            <Text style={{marginBottom: 30}}>TERAZ GRA: {roomData.players[roomData.currentPlayer]?.playerName.toUpperCase()}</Text>
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -249,6 +264,12 @@ const GameScreen = ({ route }) => {
                         style={styles.backgroundStyle}
                     >
                         <MarginWrapper>
+                            <View style={styles.exitButtonWrapper}>
+                                <ExitButton onPress={exitGame}/>
+                            </View>
+                            <View style={styles.pointsWrapper}>
+                                {renderPlayersPoints()}
+                            </View>
                             <Text style={styles.word}>{roomData.word}</Text>
                             <PrimaryInput
                                 ref={textInputRef}
@@ -261,8 +282,7 @@ const GameScreen = ({ route }) => {
                                 <PrimaryButton title="LEWA" onPress={() => submitLetter('left')} style={{flex: 1, marginLeft: 0}} />
                                 <PrimaryButton title="PRAWA" onPress={() => submitLetter('right')} style={{flex: 1, marginRight: 0}} />
                             </View>
-                            <PrimaryButton title="SPRAWDZ" onPress={checkWord} />
-                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                            <SecondaryButton title="SPRAWDZ" onPress={checkWord} />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -270,6 +290,16 @@ const GameScreen = ({ route }) => {
     }
 
     if (roomData.status === 'finished') {
+        let reason_text = ''
+        if (roomData.reason == 'word_finished') {
+            reason_text = 'GRACZ ' + roomData.players[roomData.lostPlayer]?.playerName.toUpperCase()+' ZAKOŃCZYŁ SŁOWO!';
+        }
+        if (roomData.reason == 'checked_word_incorect') {
+            reason_text = 'GRACZ ' + roomData.players[roomData.lostPlayer]?.playerName.toUpperCase()+' PODAŁ NIEPOPRAWNE SŁOWO!';
+        }
+        if (roomData.reason == 'checked_word_correct') {
+            reason_text = 'GRACZ ' + roomData.players[roomData.lastPlayer]?.playerName.toUpperCase()+' PODAŁ POPRAWNE SŁOWO!';
+        }
         return (
             <View style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -279,19 +309,29 @@ const GameScreen = ({ route }) => {
                             style={styles.backgroundStyle}
                         >
                         <MarginWrapper>
-                            <Text>Koniec gry!</Text>
-                            <Text>{reasons[roomData.reason]} {roomData.explanation}</Text>
+                            <View style={styles.exitButtonWrapper}>
+                                <ExitButton onPress={exitGame}/>
+                            </View>
+                            <View style={styles.pointsWrapper}>
+                                {renderPlayersPoints()}
+                            </View>
+                            <Text style={styles.finishMessage[roomData.reason]}>{reason_text}</Text>
                             <Text style={styles.word}>{roomData.word}</Text>
-                            <Text>Przegrał gracz: {roomData.players[roomData.lostPlayer]?.playerName}</Text>
-                            {renderPlayersPoints()}
-                            {roomData.reason !== 'word_incorect' && (
+                            {roomData.reason !== 'checked_word_incorect' && (
                                 <PrimaryButton
                                     title="SPRAWDŹ ZNACZENIE"
                                     onPress={() => Linking.openURL('https://www.sjp.pl/'+roomData.word)}
                                 />
                             )}
-                            <PrimaryButton title="NOWA RUNDA" onPress={submitNewGame} />
-                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                            {roomData.lostPlayer == gameData.your_player_hash && (
+                                <PrimaryButton
+                                    title="NOWA RUNDA"
+                                    onPress={submitNewGame}
+                                />
+                            )}
+                            {roomData.lostPlayer != gameData.your_player_hash && (
+                                <Text style={{marginBottom: 20, marginTop: 20}}>{roomData.players[roomData.lostPlayer]?.playerName.toUpperCase()} ROZPOCZYNA NOWĄ RUNDĘ</Text>
+                            )}
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -308,10 +348,17 @@ const GameScreen = ({ route }) => {
                         style={styles.backgroundStyle}
                     >
                         <MarginWrapper>
-                            <Text>Gracz {roomData.players[roomData.lastPlayer]?.playerName} sprawdza!</Text>
-                            <Text>Teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                            <View style={styles.exitButtonWrapper}>
+                                <ExitButton onPress={exitGame}/>
+                            </View>
+                            <View style={styles.pointsWrapper}>
+                                {renderPlayersPoints()}
+                            </View>
+                            <Text style={styles.checkMessage}>GRACZ {roomData.players[roomData.lastPlayer]?.playerName.toUpperCase()} SPRAWDZA!</Text>
                             <Text style={styles.word}>{roomData.word}</Text>
-                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                            <Image source={require('./assets/loader.gif')} style={{ width: 45, height: 15, marginBottom: 20 }} />
+                            <Text style={{marginBottom: 30}}>TERAZ GRA: {roomData.players[roomData.currentPlayer]?.playerName.toUpperCase()}</Text>
+                            {/* <Text>{JSON.stringify(roomData)}</Text> */}
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -328,17 +375,21 @@ const GameScreen = ({ route }) => {
                         style={styles.backgroundStyle}
                     >
                         <MarginWrapper>
-                            <Text>Gracz {roomData.players[roomData.lastPlayer]?.playerName} sprawdza!</Text>
-                            <Text>Teraz gra: {roomData.players[roomData.currentPlayer]?.playerName}</Text>
+                            <View style={styles.exitButtonWrapper}>
+                                <ExitButton onPress={exitGame}/>
+                            </View>
+                            <View style={styles.pointsWrapper}>
+                                {renderPlayersPoints()}
+                            </View>
+                            <Text style={styles.checkMessage}>GRACZ {roomData.players[roomData.lastPlayer]?.playerName.toUpperCase()} SPRAWDZA!</Text>
                             <Text style={styles.word}>{roomData.word}</Text>
-                            <Text>Podaj swoje słowo:</Text>
                             <PrimaryInput
                                 value={explanation}
                                 onChangeText={handleExplanationChange}
-                                placeholder="Słowo"
+                                placeholder="Podaj swoje słowo"
                             />
                             <PrimaryButton title="WYSLIJ WYJASNIENIE" onPress={submitExplanation} />
-                            <SecondaryButton title="WYJDŹ" onPress={exitGame} />
+                            {/* <Text>{JSON.stringify(roomData)}</Text> */}
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
@@ -372,6 +423,8 @@ const styles = StyleSheet.create({
         color: "#4A4A4A",
         textAlign: "center",
         fontWeight: "bold",
+        marginBottom: 15,
+        marginTop: 15,
     },
     input: {
         borderWidth: 1,
@@ -400,6 +453,49 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         alignContent: 'stretch',
     },
+    playerPoints: {
+        fontSize: 19,
+        color: "#4A4A4A",
+        fontWeight: "bold",
+    },
+    pointsWrapper: {
+        position: 'absolute',
+        left: 30,
+        top: 50,
+    },
+    exitButtonWrapper: {
+        position: 'absolute',
+        top: 50,
+        right: 30,
+    },
+    checkMessage: {
+        fontSize: 19,
+        color: "#CF0089",
+        textAlign: "center",
+        fontWeight: "bold",
+    },
+    finishMessage: {
+        word_finished: {
+            fontSize: 19,
+            color: "#5A1F85",
+            textAlign: "center",
+            fontWeight: "bold",
+        },
+        checked_word_incorect: {
+            fontSize: 19,
+            color: "#EF406D",
+            textAlign: "center",
+            fontWeight: "bold",
+
+        },
+        checked_word_correct: {
+            fontSize: 19,
+            color: "#FBC421",
+            textAlign: "center",
+            fontWeight: "bold",
+
+        }
+    }
 });
 
 export default GameScreen;
