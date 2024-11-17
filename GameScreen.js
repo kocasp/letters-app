@@ -163,13 +163,19 @@ const GameScreen = ({ route }) => {
 
     // Function to render all players' points
     const renderPlayersPoints = () => {
-        const playersEntries = Object.entries(roomData.players || {}).sort((a, b) => a[0].localeCompare(b[0]));; // Ensuring roomData.players is an object
-        return playersEntries.map(([playerHash, playerDetails]) => (
-            <Text key={playerHash} style={styles.playerPoints}>
-                {playerDetails.playerName.toUpperCase() || playerHash}: {playerDetails.points || 0}
-            </Text>
-        ));
+        const playersEntries = Object.entries(roomData.players || {}).sort((a, b) => a[0].localeCompare(b[0])); // Ensuring roomData.players is an object
+        return (
+            <>
+                <Text style={styles.penaltyPointsHeader}>Punkty karne:</Text>
+                {playersEntries.map(([playerHash, playerDetails]) => (
+                    <Text key={playerHash} style={styles.playerPoints}>
+                        {playerDetails.playerName.toUpperCase() || playerHash}: {playerDetails.points || 0}
+                    </Text>
+                ))}
+            </>
+        );
     };
+
 
     const submitExplanation = async () => {
         try {
