@@ -39,7 +39,11 @@ const GameScreen = ({ route }) => {
     const textInputRef = useRef(null);
 
     const handleLetterChange = (text) => {
-        setLetter(text.toUpperCase());
+        if (text.length > 1) {
+            Alert.alert("Mozesz wpisać tylko jedna literkę")
+            return; // Ignore input if it contains more than one character
+        }
+        setLetter(text.charAt(0).toUpperCase());
         if (text.length === 1) {
             Keyboard.dismiss();
         };
