@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
 import PrimaryInput from './components/PrimaryInput';
 import PrimaryButton from './components/PrimaryButton';
+import SecondaryButton from './components/SecondaryButton';
 import MarginWrapper from './components/MarginWrapper';
 
 const SelectRoomScreen = ({ navigation }) => {
@@ -10,6 +11,10 @@ const SelectRoomScreen = ({ navigation }) => {
 
     const handleJoinGame = () => {
         navigation.navigate('Join', { roomId: roomId });
+    };
+
+    const handleGoHome = () => {
+        navigation.navigate('Home');
     };
 
     const handleRoomIdChange = (text) => {
@@ -34,6 +39,10 @@ const SelectRoomScreen = ({ navigation }) => {
                         maxLength={6}
                     />
                     <PrimaryButton title="Dołącz do gry" onPress={handleJoinGame} />
+                    <SecondaryButton
+                        title="Anuluj"
+                        onPress={handleGoHome}
+                    />
                 </MarginWrapper>
             </ImageBackground>
         </View>

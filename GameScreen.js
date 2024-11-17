@@ -53,6 +53,10 @@ const GameScreen = ({ route }) => {
         setExplanation(text);
     };
 
+    const handleGoHome = function () {
+        navigation.navigate('Home');
+    };
+
     useEffect(() => {
         const docRef = doc(db, "rooms", gameData.id);
 
@@ -230,6 +234,10 @@ const GameScreen = ({ route }) => {
                             <Text onPress={copyToClipboard} style={styles.roomName}>{gameData.id}</Text>
                             <Text style={{color: '#aaaaaa'}}>Kliknij kod aby skopiowac do schowka</Text>
                             <Text style={{ textAlign: "center", marginTop: 30, marginBottom: 30 }}>Podaj kod pokoju znajomemu aby mógł{"\n"} dołączyć do gry</Text>
+                            <SecondaryButton
+                                title="Anuluj"
+                                onPress={handleGoHome}
+                            />
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>

@@ -4,6 +4,7 @@ import { View, Button, TextInput, Alert, ActivityIndicator, Text, StyleSheet, To
 import { useNavigation } from '@react-navigation/native';
 import PrimaryInput from './components/PrimaryInput';
 import PrimaryButton from './components/PrimaryButton';
+import SecondaryButton from './components/SecondaryButton';
 import MarginWrapper from './components/MarginWrapper';
 
 const JoinScreen = ({ route }) => {
@@ -16,8 +17,12 @@ const JoinScreen = ({ route }) => {
         setPlayerName(text);
     };
 
-    const joinGame = async () => {
-        if(!playerName) {
+    const handleGoHome = (text) => {
+        navigation.navigate('Home');
+    };
+
+    async function joinGame() {
+        if (!playerName) {
             Alert.alert('Podaj imie gracza');
             return;
         }
@@ -31,7 +36,7 @@ const JoinScreen = ({ route }) => {
             navigation.navigate('Home');
         }
         setIsJoiningGame(false);
-    };
+    }
 
     return (
         <View style={styles.container}>
@@ -50,6 +55,10 @@ const JoinScreen = ({ route }) => {
                         title="Start"
                         onPress={joinGame}
                         disabled={isJoiningGame}
+                    />
+                    <SecondaryButton
+                        title="Anuluj"
+                        onPress={handleGoHome}
                     />
                     {isJoiningGame && (
                         <View style={styles.loadingContainer}>
