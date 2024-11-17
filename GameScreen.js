@@ -36,11 +36,11 @@ const GameScreen = ({ route }) => {
         "checked_word_incorect": `Proponowane słowo nie jest poprawne:`,
         "checked_word_correct": `Proponowane słowo jest poprawne:`
     }
-    const textInputRef = useRef(null);
 
     const handleLetterChange = (text) => {
         if (text.length > 1) {
             Alert.alert("Mozesz wpisać tylko jedna literkę")
+            Keyboard.dismiss();
             return; // Ignore input if it contains more than one character
         }
         setLetter(text.charAt(0).toUpperCase());
@@ -98,6 +98,10 @@ const GameScreen = ({ route }) => {
     
 
     const submitLetter = async (side) => {
+        if (!letter) {
+            Alert.alert("Wpisz literę");
+            return;
+        }
         try {
             const queryParams = new URLSearchParams({
                 roomName: gameData.id,
@@ -276,7 +280,6 @@ const GameScreen = ({ route }) => {
                             </View>
                             <Text style={styles.word}>{roomData.word}</Text>
                             <PrimaryInput
-                                ref={textInputRef}
                                 value={letter}
                                 onChangeText={handleLetterChange}
                                 placeholder="Podaj literke"
