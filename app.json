@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Letters",
-    "slug": "Letters",
+    "slug": "letters",
     "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
