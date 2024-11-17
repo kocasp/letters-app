@@ -27,8 +27,8 @@ const JoinScreen = ({ route }) => {
             let json = await response.json();
             navigation.navigate('Game', { gameData: json }); // Navigate to GameScreen with response data
         } catch (error) {
-            Alert.alert('Blad dolaczania. Sprawdz kod pokoju.', error.message);
-            navigation.navigate('Select');
+            Alert.alert('Blad dolaczania. Sprawdz kod pokoju.');
+            navigation.navigate('Home');
         }
         setIsJoiningGame(false);
     };
