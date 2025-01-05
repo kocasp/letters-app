@@ -303,7 +303,9 @@ const GameScreen = ({ route }) => {
                                 <PrimaryButton title="LEWA" onPress={() => submitLetter('left')} style={{flex: 1, marginLeft: 0}} />
                                 <PrimaryButton title="PRAWA" onPress={() => submitLetter('right')} style={{flex: 1, marginRight: 0}} />
                             </View>
-                            <SecondaryButton title="SPRAWDZ" onPress={checkWord} />
+                            {roomData.word.length > 1 && (
+                                <SecondaryButton title="SPRAWDZ" onPress={checkWord} />
+                            )}
                         </MarginWrapper>
                     </ImageBackground>
                 </TouchableWithoutFeedback>
